@@ -1,0 +1,116 @@
+Claro! Vou te guiar passo a passo sobre como usar o **n8n** para criar uma automação que analise seu site por categorias, produtos e descrições, e crie uma planilha com essas informações. Vamos fazer isso de forma visual e sem codificação, usando a interface do n8n.
+
+### Passo 1: **Instalar o n8n**
+
+O n8n pode ser executado de várias formas: localmente, usando Docker, ou você pode usar a versão em nuvem. Vou descrever como rodar o n8n localmente.
+
+#### **1.1. Instalando o n8n Localmente**
+
+Para rodar o n8n localmente, você pode usar o **n8n Desktop** ou o **Docker**.
+
+**Usando o Docker** (Método recomendado):
+
+1. Instale o **Docker** em sua máquina, caso ainda não tenha.
+
+   * [Instalar Docker](https://www.docker.com/get-started)
+2. No terminal, execute o seguinte comando para rodar o n8n:
+
+   ```bash
+   docker run -it --rm --name n8n -p 5678:5678 n8nio/n8n
+   ```
+
+Isso iniciará o **n8n** no seu navegador em `http://localhost:5678`.
+
+#### **1.2. Usando o n8n Cloud**
+
+Se você preferir não se preocupar com a instalação, pode usar a versão em nuvem do n8n:
+
+* Acesse o site do n8n e crie uma conta: [n8n.io](https://n8n.io/).
+* Após se registrar, você pode acessar a interface do n8n diretamente pelo navegador.
+
+---
+
+### Passo 2: **Criando o Fluxo no n8n**
+
+Agora que o n8n está rodando, vamos criar o fluxo para o scraping e geração da planilha.
+
+#### **2.1. Criando um Novo Fluxo**
+
+1. Após acessar o n8n, clique em **"Create New Workflow"**.
+2. O editor de fluxo será aberto. Vamos adicionar os módulos necessários para fazer o scraping do site e gerar a planilha.
+
+#### **2.2. Adicionar o Módulo HTTP Request (Para Buscar a Página)**
+
+1. No editor do fluxo, clique no **"plus"** para adicionar um novo módulo e escolha **HTTP Request**.
+2. No painel de configurações, configure a requisição:
+
+   * **Método:** `GET`
+   * **URL:** A URL da página que você quer raspar (exemplo: `https://www.seusite.com/produtos`).
+3. Clique em **Execute Node** para testar a requisição e garantir que você está obtendo os dados da página corretamente.
+
+#### **2.3. Adicionar o Módulo HTML Extract (Para Raspar os Dados)**
+
+Agora, vamos adicionar o módulo para extrair os dados relevantes da página que você acabou de requisitar.
+
+1. Clique novamente no **"plus"** para adicionar outro módulo e escolha **HTML Extract**.
+2. Conecte o módulo de **HTTP Request** ao **HTML Extract**.
+3. Configure o módulo de **HTML Extract**:
+
+   * **Input:** Aqui você deve mapear a entrada como o conteúdo HTML da resposta do módulo anterior. Use o campo de **"Body"** da resposta do módulo HTTP.
+   * **CSS Selectors:** Agora você vai definir os seletores CSS para identificar e extrair as informações que você quer. Por exemplo:
+
+     * **Nome do Produto:** `.product-name`
+     * **Descrição do Produto:** `.product-description`
+     * **Categoria:** `.product-category`
+4. Após configurar, clique em **Execute Node** para ver se ele extraiu corretamente as informações da página.
+
+#### **2.4. Adicionar o Módulo Google Sheets (Para Criar a Planilha)**
+
+Agora vamos armazenar os dados extraídos na planilha.
+
+1. Clique no **"plus"** novamente e adicione o módulo **Google Sheets**.
+2. Conecte o módulo de **HTML Extract** ao **Google Sheets**.
+3. Configure o módulo de **Google Sheets**:
+
+   * **Ação:** Escolha a ação **"Append Row"** para adicionar uma linha com as informações extraídas.
+   * **Planilha:** Selecione ou crie uma nova planilha no Google Sheets (por exemplo, "Produtos").
+   * **Planilha de Dados:** Mapear os dados extraídos para as colunas da planilha:
+
+     * **Nome do Produto:** Mapeie com o dado extraído.
+     * **Descrição do Produto:** Mapeie com o dado extraído.
+     * **Categoria:** Mapeie com o dado extraído.
+4. Conecte as saídas dos dados do **HTML Extract** às colunas de sua planilha no **Google Sheets**.
+5. Clique em **Execute Node** para verificar se os dados foram enviados corretamente para o Google Sheets.
+
+#### **2.5. Agendar a Execução do Fluxo**
+
+Agora que o fluxo está funcionando corretamente, você pode agendá-lo para rodar em intervalos regulares:
+
+1. No topo do fluxo, clique em **"Schedule"**.
+2. Escolha o intervalo que deseja (por exemplo, **diariamente**, **semanalmente**, etc.).
+3. Salve o fluxo e ative a execução agendada.
+
+---
+
+### Passo 3: **Testando e Validando a Automação**
+
+1. **Testar o Fluxo Completo:** Execute o fluxo manualmente para garantir que ele está buscando os produtos corretamente e gerando a planilha como esperado.
+2. **Verificar a Planilha:** Abra o Google Sheets para garantir que as informações estão sendo corretamente inseridas na planilha.
+
+---
+
+### Passo 4: **Conclusão e Considerações**
+
+Agora você tem uma automação completa usando o **n8n** que:
+
+* Faz scraping da página de produtos do seu site.
+* Extrai os dados de nome, descrição e categoria.
+* Cria uma planilha no Google Sheets com essas informações.
+* Pode ser agendada para rodar automaticamente.
+
+#### **Dicas:**
+
+* **Se o site for dinâmico** (ou seja, carrega dados com JavaScript), você pode precisar usar um módulo de **navegação headless** como **Puppeteer** ou **Playwright**, já que o **HTML Extract** só funciona com páginas estáticas.
+* Certifique-se de verificar os **termos de uso** do site para garantir que o scraping não infrinja nenhuma regra.
+
+Agora, você tem uma solução automatizada sem codificação para extrair dados e gerar planilhas! Se precisar de mais detalhes ou ajustes, estou à disposição para te ajudar.
