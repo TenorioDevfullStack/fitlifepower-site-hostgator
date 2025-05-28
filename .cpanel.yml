@@ -4,3 +4,6 @@ deployment:
     - export DEPLOYPATH=/home4/fitlif67/public_html/git-site/
     - /bin/cp -R out/* $DEPLOYPATH
     - /bin/cp -R .htaccess $DEPLOYPATH
+  post-deploy:
+    - /bin/chmod -R 755 $DEPLOYPATH
+    - /bin/find $DEPLOYPATH -type f -exec chmod 644 {} \;

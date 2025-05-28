@@ -12,8 +12,8 @@ git add .
 echo "Criando commit..."
 git commit -m "Atualização do site: $(date)"
 
-# Enviar para a Hostgator
-echo "Enviando para a Hostgator..."
-git push hostgator master
+# Enviar para o GitHub
+echo "Enviando para o GitHub..."
+git push origin master
 
-echo "Deploy concluído!" 
+echo "Deploy concluído! O cPanel irá automaticamente fazer o deploy dos arquivos." 
