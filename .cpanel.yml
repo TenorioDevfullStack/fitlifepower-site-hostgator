@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home4/fitlif67/public_html/git-site/
+    - /bin/cp -R out/* $DEPLOYPATH
+    - /bin/cp -R .htaccess $DEPLOYPATH
