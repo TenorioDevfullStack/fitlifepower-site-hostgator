@@ -1,7 +1,8 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home4/fitlif67/public_html/git-site/
+    - export DEPLOYPATH=/home4/fitlif67/public_html/
+    - /bin/rm -rf $DEPLOYPATH/*
     - /bin/cp -R out/* $DEPLOYPATH
     - /bin/cp -R .htaccess $DEPLOYPATH
   post-deploy:
