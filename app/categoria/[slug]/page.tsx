@@ -1,5 +1,3 @@
-"use client";
-
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { ProductGrid } from "@/components/product-grid";
@@ -13,7 +11,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { useEffect, useState } from "react";
 
 const categoryInfo = {
   suplementos: {
@@ -76,22 +73,17 @@ const categoryInfo = {
   },
 };
 
+export async function generateStaticParams() {
+  return Object.keys(categoryInfo).map((slug) => ({
+    slug: slug,
+  }));
+}
+
 export default function CategoryPage({ params }: { params: { slug: string } }) {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   const category = categoryInfo[params.slug as keyof typeof categoryInfo];
 
   if (!category) {
     return <div>Categoria não encontrada</div>;
-  }
-
-  if (!isMounted) {
-    // Opcional: renderizar um spinner ou placeholder no lado do servidor/enquanto hidrata
-    return null; // Ou um loading state
   }
 
   return (
